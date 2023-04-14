@@ -17,13 +17,17 @@ export class CartController {
   // @UseGuards(JwtAuthGuard)
   // @UseGuards(BasicAuthGuard)
   @Get()
-  findUserCart(@Req() req: AppRequest) {
-    const cart = this.cartService.findOrCreateByUserId(getUserIdFromRequest(req));
+  async findUserCart(@Req() req: AppRequest) {
+    const cart = await this.cartService.findOrCreateByUserId(getUserIdFromRequest(req));
 
     return {
       statusCode: HttpStatus.OK,
       message: 'OK',
-      data: { cart, total: calculateCartTotal(cart) },
+      data: { 
+        cart, 
+        // TODO: To get calculateCartTotal(cart)
+        total: 0
+      },
     }
   }
 
@@ -38,7 +42,8 @@ export class CartController {
       message: 'OK',
       data: {
         cart,
-        total: calculateCartTotal(cart),
+        // TODO: To get calculateCartTotal(cart)
+        total: 0,
       }
     }
   }
@@ -62,7 +67,7 @@ export class CartController {
     const userId = getUserIdFromRequest(req);
     const cart = this.cartService.findByUserId(userId);
 
-    if (!(cart && cart.items.length)) {
+    if (!(cart/* && cart.items.length*/)) {
       const statusCode = HttpStatus.BAD_REQUEST;
       req.statusCode = statusCode
 
@@ -72,8 +77,12 @@ export class CartController {
       }
     }
 
-    const { id: cartId, items } = cart;
-    const total = calculateCartTotal(cart);
+    // const { id: cartId, items } = cart;
+    const cartId = 10;
+    const items = [];
+
+    // const total = calculateCartTotal(cart);
+    const total = 1333;
     const order = this.orderService.create({
       ...body, // TODO: validate and pick only necessary data
       userId,
