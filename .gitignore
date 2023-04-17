@@ -1,6 +1,8 @@
 # compiled output
 /dist
 /node_modules
+/.build
+/.serverless
 
 # Logs
 logs
@@ -9,6 +11,15 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
+
+# Serverless directories
+.serverless
+
+# esbuild directories
+.esbuild
+
+# Environment Variables
+.env
 
 # OS
 .DS_Store

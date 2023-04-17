@@ -1,31 +1,17 @@
 import { Injectable } from '@nestjs/common';
-
-import { v4 } from 'uuid';
-
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { Cart } from '../models';
+import { Carts } from '../entity';
 
 @Injectable()
 export class CartService {
-  private userCarts: Record<string, Cart> = {};
+  constructor(
+    @InjectRepository(Carts) private cartsRepository: Repository<Carts>,
+  ) {}
 
-  findByUserId(userId: string): Cart {
-    return this.userCarts[ userId ];
-  }
-
-  createByUserId(userId: string) {
-    const id = v4(v4());
-    const userCart = {
-      id,
-      items: [],
-    };
-
-    this.userCarts[ userId ] = userCart;
-
-    return userCart;
-  }
-
-  findOrCreateByUserId(userId: string): Cart {
-    const userCart = this.findByUserId(userId);
+  async findOrCreateByUserId(userId: string): Promise<Carts> {
+    const userCart = await this.findByUserId(userId);
 
     if (userCart) {
       return userCart;
@@ -34,22 +20,22 @@ export class CartService {
     return this.createByUserId(userId);
   }
 
-  updateByUserId(userId: string, { items }: Cart): Cart {
-    const { id, ...rest } = this.findOrCreateByUserId(userId);
+  async findByUserId(userId: string): Promise<Carts> {
+    return this.cartsRepository.findOneBy({ user_id: userId });
+  }
 
-    const updatedCart = {
-      id,
-      ...rest,
-      items: [ ...items ],
-    }
+  createByUserId(userId: string) {
+    // TODO: Create cart using Carts Repository
+    return null;
+  }
 
-    this.userCarts[ userId ] = { ...updatedCart };
-
-    return { ...updatedCart };
+  async updateByUserId(userId: string, cart: Cart) {
+    // TODO: Implement
+    return {};
   }
 
   removeByUserId(userId): void {
-    this.userCarts[ userId ] = null;
+    // TODO: Implement
   }
 
 }

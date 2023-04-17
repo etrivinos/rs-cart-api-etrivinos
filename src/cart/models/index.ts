@@ -13,5 +13,9 @@ export type CartItem = {
 
 export type Cart = {
   id: string,
-  items: CartItem[],
+  user_id: string,
+  created_at: string,
+  updated_at: string,
+  status: 'OPEN' | 'ORDERED'
+  items?: CartItem[],
 }
